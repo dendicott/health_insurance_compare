@@ -1,11 +1,6 @@
 import numpy as np
 import pandas as pd
-import math
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statistics as st
-
-sns.set_theme(style="whitegrid")
+import plotly.express as px
 
 def spend_calculation(dframe,plan,spend,tax_rate):
     cost_adj = []
@@ -107,21 +102,19 @@ tax_input = float(tax_input)
 health_data = employee_cost(dependent_input,tax_input)
 
 dependents = health_data[2]
-dframe = pd.DataFrame(health_data[0])
-Spend = health_data[1]
-hdhp_cost_adj = health_data[3]
-epo_cost_adj = health_data[4]
-ppo_cost_adj = health_data[5]
 
-fig, ax = plt.subplots(1,1,figsize=(16,9))
-fig.suptitle('Health Plan Adjusted Cost',fontsize=16, fontweight='bold')
-ax.plot(Spend,hdhp_cost_adj)
-ax.plot(Spend,epo_cost_adj)
-ax.plot(Spend,ppo_cost_adj)
-ax.set_ylabel('Employee Adjust Cost ($)')
-ax.set_xlabel('Annual Medical Spend ($)')
-ax.set_title('(Negative adjusted cost is cash in your pocket)')
-ax.legend(['HDHP','EPO','PPO'])
+cost_df = pd.DataFrame(index=health_data[1])
+cost_df['HDHP'] = health_data[3] 
+cost_df['EPO'] = health_data[4]
+cost_df['PPO'] = health_data[5]
 
-plt.show()
+fig = px.line(cost_df,x = cost_df.index, y=[cost_df['HDHP'], cost_df['EPO'], cost_df['PPO']],template="plotly_dark")
+fig.update_layout(legend_title_text='Plans',
+                    xaxis_title='Annual Medical Spend ($)',
+                    yaxis_title='Employee Adjusted Cost ($)',
+                    title={'text': 'Health Plan Adjusted Cost'})
+fig.add_annotation(text="Negative adjusted cost is cash in your pocket",
+                    xref="paper", yref="paper",
+                    x=0.01, y=1.0, showarrow=False)
+fig.show()
 
