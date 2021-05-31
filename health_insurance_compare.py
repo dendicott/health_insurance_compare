@@ -63,7 +63,6 @@ def employee_cost(dependents, tax_rate):
         dframe['Tax Deduction'][plan]         = tax_deduction[string_construct]
         dframe['Coinsurance'][plan]           = coinsurance[string_construct]
     
-   
     hdhp_cost_adj = spend_calculation(dframe,'HDHP',spend,tax_rate)
     epo_cost_adj = spend_calculation(dframe,'EPO',spend,tax_rate)
     ppo_cost_adj = spend_calculation(dframe,'PPO',spend,tax_rate)
